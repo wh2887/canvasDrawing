@@ -56,7 +56,7 @@ window.onload = function () {
     let optionsItems = document.querySelectorAll('.options-item')
     let index = 0;
     for (let i = 0; i < optionsItems.length; i++) {
-        optionsItems[i].addEventListener('click', () => {
+        optionsItems[i].addEventListener('mousedown', () => {
             optionsItems[index].classList.remove('active')
             index = i
             optionsItems[i].classList.add('active')
@@ -65,7 +65,7 @@ window.onload = function () {
 }
 
 
-
+// 下载
 let downloadButton = document.querySelector('.download')
 downloadButton.addEventListener('click', () => {
     let imgUrl = canvas.toDataURL("image/png");
@@ -76,3 +76,14 @@ downloadButton.addEventListener('click', () => {
     saveA.target = "_blank";
     saveA.click();
 }, false)
+
+// 擦除整块
+let resetCanvas = document.querySelector('.clear')
+resetCanvas.addEventListener('mousedown', () => {
+    ctx.clearRect(0, 0, canvas.width, canvas.height)
+    console.log(1)
+})
+resetCanvas.addEventListener('mouseup', () => {
+    resetCanvas.classList.remove('active')
+    console.log(2)
+})
