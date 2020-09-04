@@ -3,6 +3,8 @@ let canvas = document.querySelector('#canvas')
 canvas.width = document.documentElement.clientWidth
 canvas.height = document.documentElement.clientHeight
 let ctx = canvas.getContext('2d')
+ctx.strokeStyle = 'blue'
+
 
 
 let painting = false
@@ -41,8 +43,6 @@ if (isTouchDevice) {
 
 
 function drawLine(startX, startY, endX, endY) {
-    ctx.strokeStyle = 'blue'
-    ctx.fillStyle = 'blue'
     ctx.lineWidth = 8
     ctx.lineCap = "round";
     ctx.beginPath();
@@ -52,6 +52,7 @@ function drawLine(startX, startY, endX, endY) {
     ctx.stroke();
 }
 
+// options style
 window.onload = function () {
     let optionsItems = document.querySelectorAll('.options-item')
     let index = 0;
@@ -63,6 +64,34 @@ window.onload = function () {
         }, false)
     }
 }
+
+// color style
+window.onload = function () {
+    let colorItems = document.querySelectorAll('.color-item')
+    let index = 0;
+    for (let i = 0; i < colorItems.length; i++) {
+        colorItems[i].addEventListener('mousedown', () => {
+            colorItems[index].classList.remove('color-active')
+            index = i
+            colorItems[i].classList.add('color-active')
+        }, false)
+    }
+}
+let colorItems = document.querySelectorAll('.color-item')
+for (let i = 0; i < colorItems.length; i++) {
+    colorItems[i].addEventListener('click', () => {
+        console.log(1)
+        ctx.strokeStyle = colorItems[i].style.backgroundColor
+    }, false)
+}
+
+// for (let i = 0; i < aColorBtn.length; i++) {
+//     aColorBtn[i].onclick = function () {
+//     for (let i = 0; i < aColorBtn.length; i++) {
+//         activeColor = this.style.backgroundColor;
+//         ctx.strokeStyle = activeColor;
+//     }
+// }
 
 
 // 下载
@@ -81,9 +110,7 @@ downloadButton.addEventListener('click', () => {
 let resetCanvas = document.querySelector('.clear')
 resetCanvas.addEventListener('mousedown', () => {
     ctx.clearRect(0, 0, canvas.width, canvas.height)
-    console.log(1)
 })
 resetCanvas.addEventListener('mouseup', () => {
     resetCanvas.classList.remove('active')
-    console.log(2)
 })
