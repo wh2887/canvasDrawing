@@ -114,3 +114,9 @@ resetCanvas.addEventListener('mousedown', () => {
 resetCanvas.addEventListener('mouseup', () => {
     resetCanvas.classList.remove('active')
 })
+
+
+// 禁止微信浏览器 H5 下拉显示
+document.body.addEventListener('touchmove', function (e) {
+    e.preventDefault()
+}, { passive: false })
