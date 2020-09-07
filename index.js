@@ -5,13 +5,14 @@ let downloadButton = document.querySelector('.download')
 let resetCanvas = document.querySelector('.clear')
 let inputRange = document.querySelector('#range')
 let optionsItems = document.querySelectorAll('.options-item')
+let back = document.querySelector(".back");
 canvas.width = document.documentElement.clientWidth
 canvas.height = document.documentElement.clientHeight
 let ctx = canvas.getContext('2d')
 ctx.strokeStyle = '#393b44'
 ctx.lineWidth = 8
 
-
+let historyData = [];
 let hasChanged = false
 let painting = false
 
@@ -22,6 +23,8 @@ if (isTouchDevice) {
     canvas.ontouchstart = (e) => {
         let x = e.touches[0].clientX
         let y = e.touches[0].clientY
+        this.firstDot = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        saveData(this.firstDot);
         last = [x, y]
     }
 
@@ -34,6 +37,8 @@ if (isTouchDevice) {
 } else {
     canvas.onmousedown = (e) => {
         painting = true
+        this.firstDot = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        saveData(this.firstDot);
         last = [e.clientX, e.clientY]
     }
 
@@ -129,3 +134,22 @@ window.onbeforeunload = () => {
     if (hasChanged)
         return "放弃当前未保存内容而关闭页面？";
 }
+
+canvas.ontouchstart = function (e) {
+    // 在这里储存绘图表面
+
+}
+
+
+
+function saveData(data) {
+    (historyData.length === 10) && (historyData.shift()); // 上限为储存10步，太多了怕挂掉
+    historyData.push(data);
+}
+back.addEventListener('click', () => {
+    if (historyData.length < 1) return false;
+    ctx.putImageData(historyData[historyData.length - 1], 0, 0);
+    historyData.pop()
+}, false)
+
+
