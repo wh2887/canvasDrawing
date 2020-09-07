@@ -11,16 +11,8 @@
 <body>
     <div id="options-wrapper">
         <ul class="options">
-            <li class="options-item">
-                <svg class="icon" aria-hidden="true">
-                    <use xlink:href="#icon-pen"></use>
-                </svg>
-            </li>
-            <li class="options-item">
-                <svg class="icon" aria-hidden="true">
-                    <use xlink:href="#icon-line_weight"></use>
-                </svg>
-            </li>
+
+
             <li class="options-item clear">
                 <svg class="icon" aria-hidden="true">
                     <use xlink:href="#icon-eraser"></use>
@@ -43,6 +35,7 @@
             </li>
         </ul>
     </div>
+
     <div id="color-wrapper">
         <ul class="color">
             <li class="color-item" style="background: white;"></li>
@@ -57,6 +50,9 @@
         </ul>
     </div>
     <canvas id="canvas"></canvas>
+    <div id="range-wrapper">
+        <input type="range" id="range" name="range" min="1" max="22" title="调整笔刷粗细">
+    </div>
 </body>
 
 <script src="index.js"></script>

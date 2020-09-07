@@ -5,6 +5,9 @@ canvas.height = document.documentElement.clientHeight
 let ctx = canvas.getContext('2d')
 ctx.strokeStyle = 'blue'
 
+ctx.lineWidth = 8
+
+
 
 
 let painting = false
@@ -43,8 +46,8 @@ if (isTouchDevice) {
 
 
 function drawLine(startX, startY, endX, endY) {
-    ctx.lineWidth = 8
     ctx.lineCap = "round";
+    ctx.lineJoin = "round";
     ctx.beginPath();
     ctx.moveTo(startX, startY);
     ctx.lineTo(endX, endY);
@@ -65,7 +68,14 @@ window.onload = function () {
     }
 }
 
-// color style
+
+// 更改粗细
+let lineSizeElement = document.querySelector('#range')
+lineSizeElement.addEventListener('change', () => {
+    ctx.lineWidth = lineSizeElement.value
+}, false)
+
+// 更改颜色
 window.onload = function () {
     let colorItems = document.querySelectorAll('.color-item')
     let index = 0;
@@ -84,14 +94,6 @@ for (let i = 0; i < colorItems.length; i++) {
         ctx.strokeStyle = colorItems[i].style.backgroundColor
     }, false)
 }
-
-// for (let i = 0; i < aColorBtn.length; i++) {
-//     aColorBtn[i].onclick = function () {
-//     for (let i = 0; i < aColorBtn.length; i++) {
-//         activeColor = this.style.backgroundColor;
-//         ctx.strokeStyle = activeColor;
-//     }
-// }
 
 
 // 下载
