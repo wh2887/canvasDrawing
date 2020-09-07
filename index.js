@@ -1,19 +1,21 @@
-/** @type {HTMLCanvasElement} */
 let canvas = document.querySelector('#canvas')
 let colorItems = document.querySelectorAll('.color-item')
 let downloadButton = document.querySelector('.download')
 let resetCanvas = document.querySelector('.clear')
 let inputRange = document.querySelector('#range')
 let optionsItems = document.querySelectorAll('.options-item')
+let back = document.querySelector('.back')
 canvas.width = document.documentElement.clientWidth
 canvas.height = document.documentElement.clientHeight
 let ctx = canvas.getContext('2d')
 ctx.strokeStyle = '#393b44'
 ctx.lineWidth = 8
 
-
+let historyData = [];
 let hasChanged = false
 let painting = false
+
+
 
 
 // 判断 PC 或 移动设备
@@ -23,6 +25,7 @@ if (isTouchDevice) {
         let x = e.touches[0].clientX
         let y = e.touches[0].clientY
         last = [x, y]
+
     }
 
     canvas.ontouchmove = (e) => {
@@ -31,10 +34,15 @@ if (isTouchDevice) {
         drawLine(last[0], last[1], x, y)
         last = [x, y]
     }
+    canvas.ontouchend = (e) => {
+        forwardImg = ctx.getImageData(0, 0, canvas.width, canvas.height)
+        saveData(forwardImg)
+    }
 } else {
     canvas.onmousedown = (e) => {
         painting = true
         last = [e.clientX, e.clientY]
+
     }
 
     canvas.onmousemove = (e) => {
@@ -44,6 +52,8 @@ if (isTouchDevice) {
         }
         canvas.onmouseup = () => {
             painting = false
+            forwardImg = ctx.getImageData(0, 0, canvas.width, canvas.height)
+            saveData(forwardImg)
         }
     }
 }
@@ -84,7 +94,6 @@ window.onload = function () {
 }
 for (let i = 0; i < colorItems.length; i++) {
     colorItems[i].addEventListener('click', () => {
-        console.log(1)
         ctx.strokeStyle = colorItems[i].style.backgroundColor
     }, false)
 }
@@ -129,3 +138,20 @@ window.onbeforeunload = () => {
     if (hasChanged)
         return "放弃当前未保存内容而关闭页面？";
 }
+
+
+
+function saveData(data) {
+    if (historyData.length <= 10) {
+        historyData.push(data);
+
+    } else {
+        historyData.shift()
+    }
+}
+back.onclick = function () {
+    if (historyData.length < 1) return window.alert('再撤销就没有啦！');
+    ctx.putImageData(historyData[historyData.length - 1], 0, 0);
+    historyData.pop()
+};
+
