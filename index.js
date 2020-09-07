@@ -4,7 +4,8 @@ let downloadButton = document.querySelector('.download')
 let resetCanvas = document.querySelector('.clear')
 let inputRange = document.querySelector('#range')
 let optionsItems = document.querySelectorAll('.options-item')
-let back = document.querySelector('.back')
+
+let back = document.querySelector(".back");
 canvas.width = document.documentElement.clientWidth
 canvas.height = document.documentElement.clientHeight
 let ctx = canvas.getContext('2d')
@@ -24,6 +25,8 @@ if (isTouchDevice) {
     canvas.ontouchstart = (e) => {
         let x = e.touches[0].clientX
         let y = e.touches[0].clientY
+        this.firstDot = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        saveData(this.firstDot);
         last = [x, y]
 
     }
@@ -41,6 +44,8 @@ if (isTouchDevice) {
 } else {
     canvas.onmousedown = (e) => {
         painting = true
+        this.firstDot = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        saveData(this.firstDot);
         last = [e.clientX, e.clientY]
 
     }
@@ -154,4 +159,5 @@ back.onclick = function () {
     ctx.putImageData(historyData[historyData.length - 1], 0, 0);
     historyData.pop()
 };
+
 
