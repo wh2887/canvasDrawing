@@ -25,12 +25,9 @@ if (isTouchDevice) {
     canvas.ontouchstart = (e) => {
         let x = e.touches[0].clientX
         let y = e.touches[0].clientY
-        this.firstDot = ctx.getImageData(0, 0, canvas.width, canvas.height);
-        saveData(this.firstDot);
         last = [x, y]
 
     }
-
     canvas.ontouchmove = (e) => {
         let x = e.touches[0].clientX
         let y = e.touches[0].clientY
@@ -38,28 +35,27 @@ if (isTouchDevice) {
         last = [x, y]
     }
     canvas.ontouchend = (e) => {
+
         forwardImg = ctx.getImageData(0, 0, canvas.width, canvas.height)
         saveData(forwardImg)
+
     }
 } else {
     canvas.onmousedown = (e) => {
         painting = true
-        this.firstDot = ctx.getImageData(0, 0, canvas.width, canvas.height);
-        saveData(this.firstDot);
         last = [e.clientX, e.clientY]
 
     }
-
     canvas.onmousemove = (e) => {
         if (painting === true) {
             drawLine(last[0], last[1], e.clientX, e.clientY)
             last = [e.clientX, e.clientY]
         }
-        canvas.onmouseup = () => {
-            painting = false
-            forwardImg = ctx.getImageData(0, 0, canvas.width, canvas.height)
-            saveData(forwardImg)
-        }
+    }
+    canvas.onmouseup = () => {
+        painting = false
+        forwardImg = ctx.getImageData(0, 0, canvas.width, canvas.height)
+        saveData(forwardImg)
     }
 }
 
@@ -104,7 +100,6 @@ for (let i = 0; i < colorItems.length; i++) {
 }
 
 
-
 // 更改粗细
 inputRange.addEventListener('change', () => {
     ctx.lineWidth = inputRange.value
@@ -134,9 +129,8 @@ resetCanvas.addEventListener('mouseup', () => {
 
 
 // 禁止微信浏览器 H5 下拉显示
-document.body.addEventListener('touchmove', function (e) {
-    e.preventDefault()
-}, { passive: false })
+
+
 
 // 未保存提示
 window.onbeforeunload = () => {
@@ -147,17 +141,13 @@ window.onbeforeunload = () => {
 
 
 function saveData(data) {
-    if (historyData.length <= 10) {
-        historyData.push(data);
-
-    } else {
-        historyData.shift()
-    }
+    return historyData.length <= 10 ? historyData.push(data) : historyData.shift()
 }
-back.onclick = function () {
-    if (historyData.length < 1) return window.alert('再撤销就没有啦！');
-    ctx.putImageData(historyData[historyData.length - 1], 0, 0);
+
+back.addEventListener('click', () => {
+    if (historyData.length < 2) return window.alert('再撤销就没有啦！');
+    ctx.putImageData(historyData[historyData.length - 2], 0, 0);
     historyData.pop()
-};
+}, false)
 
 
