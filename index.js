@@ -1,18 +1,22 @@
 /** @type {HTMLCanvasElement} */
 let canvas = document.querySelector('#canvas')
+let colorItems = document.querySelectorAll('.color-item')
+let downloadButton = document.querySelector('.download')
+let resetCanvas = document.querySelector('.clear')
+let inputRange = document.querySelector('#range')
+let optionsItems = document.querySelectorAll('.options-item')
 canvas.width = document.documentElement.clientWidth
 canvas.height = document.documentElement.clientHeight
 let ctx = canvas.getContext('2d')
-ctx.strokeStyle = 'blue'
-
+ctx.strokeStyle = '#393b44'
 ctx.lineWidth = 8
 
 
-
-
+let hasChanged = false
 let painting = false
 
 
+// 判断 PC 或 移动设备
 let isTouchDevice = 'ontouchstart' in document.documentElement;
 if (isTouchDevice) {
     canvas.ontouchstart = (e) => {
@@ -53,11 +57,11 @@ function drawLine(startX, startY, endX, endY) {
     ctx.lineTo(endX, endY);
     ctx.closePath();
     ctx.stroke();
+    hasChanged = true
 }
 
 // options style
 window.onload = function () {
-    let optionsItems = document.querySelectorAll('.options-item')
     let index = 0;
     for (let i = 0; i < optionsItems.length; i++) {
         optionsItems[i].addEventListener('mousedown', () => {
@@ -67,17 +71,8 @@ window.onload = function () {
         }, false)
     }
 }
-
-
-// 更改粗细
-let lineSizeElement = document.querySelector('#range')
-lineSizeElement.addEventListener('change', () => {
-    ctx.lineWidth = lineSizeElement.value
-}, false)
-
 // 更改颜色
 window.onload = function () {
-    let colorItems = document.querySelectorAll('.color-item')
     let index = 0;
     for (let i = 0; i < colorItems.length; i++) {
         colorItems[i].addEventListener('mousedown', () => {
@@ -87,7 +82,6 @@ window.onload = function () {
         }, false)
     }
 }
-let colorItems = document.querySelectorAll('.color-item')
 for (let i = 0; i < colorItems.length; i++) {
     colorItems[i].addEventListener('click', () => {
         console.log(1)
@@ -96,8 +90,13 @@ for (let i = 0; i < colorItems.length; i++) {
 }
 
 
+
+// 更改粗细
+inputRange.addEventListener('change', () => {
+    ctx.lineWidth = inputRange.value
+}, false)
+
 // 下载
-let downloadButton = document.querySelector('.download')
 downloadButton.addEventListener('click', () => {
     let imgUrl = canvas.toDataURL("image/png");
     let saveA = document.createElement("a");
@@ -106,10 +105,10 @@ downloadButton.addEventListener('click', () => {
     saveA.download = "img" + (new Date).getTime();
     saveA.target = "_blank";
     saveA.click();
+    hasChanged = false
 }, false)
 
 // 擦除整块
-let resetCanvas = document.querySelector('.clear')
 resetCanvas.addEventListener('mousedown', () => {
     ctx.clearRect(0, 0, canvas.width, canvas.height)
 })
@@ -118,7 +117,15 @@ resetCanvas.addEventListener('mouseup', () => {
 })
 
 
+
+
 // 禁止微信浏览器 H5 下拉显示
 document.body.addEventListener('touchmove', function (e) {
     e.preventDefault()
 }, { passive: false })
+
+// 未保存提示
+window.onbeforeunload = () => {
+    if (hasChanged)
+        return "放弃当前未保存内容而关闭页面？";
+}
